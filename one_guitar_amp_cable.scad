@@ -1,27 +1,11 @@
 
 //tc electronic box: 74x130x38, rozstaw śrub 100
 
-box_width=38;
+box_wall=3;
+box_width=40-box_wall*2;
 box_depth=130;
 box_height=38;
 box_radius=5;
-box_wall=3;
-
-
-
-module din8_socket(depth=10) {
-    translate([-11,7.5,0]) {
-        cylinder(h=depth, d=3);
-    }
-    
-    translate([0,7.5,0]) {
-        cylinder(h=depth, d=16);
-    }
-    
-    translate([11,7.5,0]) {
-        cylinder(h=depth, d=3);
-    }
-}
 
 module power_socket() {
     cylinder(h=box_wall, d=8.5);
@@ -29,6 +13,31 @@ module power_socket() {
 
 module jack_socket() {
     cylinder(h=box_wall*2, d=9.5);
+}
+
+module switch_socket() {
+    cylinder(h=box_wall*2, d=6);
+}
+
+module led_socket() {
+    cylinder(h=box_wall*2, d=8);
+}
+
+module pcb_mount(pcb_width, pcb_depth, pcb_height, wall=2) {
+    difference() {
+        cube([wall*4,wall+pcb_height,pcb_depth]);
+        translate([wall,0,0]) {
+            cube([wall*3,pcb_height,pcb_depth]);
+        }
+    }
+    
+    translate([pcb_width,0,0]) {
+        difference() {
+            cube([wall*4,wall+pcb_height,pcb_depth]);
+            cube([wall*3,pcb_height,pcb_depth]);
+            }
+        }
+    
 }
 
 module rounded_square(width, height, radius) {
@@ -107,7 +116,7 @@ module top_mount() {
     }
 }
 
-module top_part(inverted = false) {
+module top_part() {
     translate([box_wall, 6, box_height-6]) {
         rotate([0,90,0]) {
             difference() {
@@ -132,78 +141,70 @@ module top_part(inverted = false) {
         translate([box_wall,box_wall,box_wall]) {
             bottom_side(box_depth-box_wall*2, box_height-box_wall*2, box_radius, box_width-box_wall*2);
         }
-        translate([box_width/2,box_wall,box_height/4]) {
+        
+        /* bottom sockets
+        translate([box_width/2,box_wall,box_height/3]) {
             rotate([90,0,0]) {
-                din8_socket(box_wall);
+                power_socket();
             }
         }
+        */
+        
+        //top sockets
+    }
+}
+
+module top_part_dc_rf_relay() {
+    difference() {
+        top_part();
+
         rotate([90,0,0]) {
-            translate([box_width/2, box_height/3, -box_depth]) {
+            translate([box_width-10, box_height/3, -box_depth]) {
+                power_socket();
+            }
+            
+            translate([10, box_height/3, -box_depth]) {
                 power_socket();
             }
         }
         
-        //jack 1
-        translate([inverted ? 24 : box_width-24,40, box_height-box_wall*2]) {
-            jack_socket();
+        translate([box_width/2,box_depth-40, box_height-box_wall*2]) {
+            switch_socket();
         }
         
-        translate([inverted ? 5 : box_width-5,40,box_height-1]) {
-            rotate([0,0,inverted ? 0 : 180]) {
-                linear_extrude(1) {
-                    text(inverted ? "Ret" : "Amp", size=3);
-                }
+        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
+            led_socket();
+        }
+        
+        translate([9,box_depth-32,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        } 
+        
+        translate([7,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("OUT", size=3);
             }
         }
         
-        //jack 2
-        translate([inverted ? 24 : box_width-24,62, box_height-box_wall*2]) {
-            jack_socket();
-        }
-        
-        translate([inverted ? 5 : box_width-5,62,box_height-1]) {
-            rotate([0,0,inverted ? 0 : 180]) {
-                linear_extrude(1) {
-                    text(inverted ? "Send" : "FS", size=3);
-                }
-            }
-        }
-        
-        //jack 3
-        translate([inverted ? 24 : box_width-24,84, box_height-box_wall*2]) {
-            jack_socket();
-        }
-        
-        translate([inverted ? 5 : box_width-5,84,box_height-1]) {
-            rotate([0,0,inverted ? 0 : 180]) {
-                linear_extrude(1) {
-                    text(inverted ? "FS" : "Send", size=3);
-                }
-            }
-        }
-        
-        //jack 4
-        translate([inverted ? 24 : box_width-24,106, box_height-box_wall*2]) {
-            jack_socket();
-        }
-        
-        translate([inverted ? 5 : box_width-5,106,box_height-1]) {
-            rotate([0,0,inverted ? 0 : 180]) {
-                linear_extrude(1) {
-                    text(inverted ? "Amp" : "Ret", size=3);
-                }
+        translate([box_width-12,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("IN", size=3);
             }
         }
     }
 }
 
+top_part_dc_rf_relay();
 
-//bottom_part();
 
-//translate([50,0,0]) {
-//    top_part(inverted = true);
-//}
+module bottom_pard_dc_rf_relay() {
+    bottom_part();
 
-//translate([100,0,0]) {
-    top_part(inverted = false);
-//}
+    translate([box_width-box_wall,25,0]) {
+        rotate([0,0,90]) {
+            pcb_mount(50,30,3);
+        }
+    }
+}
