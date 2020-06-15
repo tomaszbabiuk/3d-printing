@@ -2,7 +2,7 @@
 //tc electronic box: 74x130x38, rozstaw śrub 100
 
 box_wall=3;
-box_width=40-box_wall*2;
+box_width=74-box_wall*2;
 box_depth=130;
 box_height=38;
 box_radius=5;
@@ -171,17 +171,17 @@ module top_part() {
     }
 }
 
-module top_part_dc_rf_relay() {
+module top_part_fs_rf_relay() {
     difference() {
         top_part();
 
         rotate([90,0,0]) {
-            translate([box_width-10, box_height/3, -box_depth]) {
+            translate([box_width-15, box_height/2, -box_depth]) {
                 power_socket();
             }
             
-            translate([10, box_height/3, -box_depth]) {
-                power_socket();
+            translate([15, box_height/2, -box_depth]) {
+                jack_socket();
             }
         }
         
@@ -193,29 +193,109 @@ module top_part_dc_rf_relay() {
             led_socket();
         }
         
-        translate([9,box_depth-32,box_height-1]) {
+        translate([25,box_depth-32,box_height-1]) {
             linear_extrude(1) {
                 text("On/Off", size=4);
             }
         } 
         
-        translate([7,box_depth-10,box_height-1]) {
+        translate([12,box_depth-10,box_height-1]) {
             linear_extrude(1) {
-                text("OUT", size=3);
+                text("FS", size=3);
             }
         }
         
-        translate([box_width-12,box_depth-10,box_height-1]) {
+        translate([box_width-23,box_depth-10,box_height-1]) {
             linear_extrude(1) {
-                text("IN", size=3);
+                text("DC (9V)", size=3);
             }
         }
     }
 }
 
-//top_part_dc_rf_relay();
 
-bottom_part();
+module top_part_fxloop_rf_relay() {
+    difference() {
+        top_part();
+
+        //top sockets
+        rotate([90,0,0]) {
+            translate([box_width-15, box_height/2, -box_depth]) {
+                jack_socket();
+            }
+            
+            translate([box_width/2, box_height/2, -box_depth]) {
+                power_socket();
+            }
+            
+            translate([15, box_height/2, -box_depth]) {
+                jack_socket();
+            }
+        }
+        
+        translate([27,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("DC (9V)", size=3);
+            }
+        }
+        
+        translate([11,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("S-IN", size=3);
+            }
+        }
+        
+        translate([box_width-18,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("R-IN", size=3);
+            }
+        }
+        
+        //plate sockets
+        translate([box_width/2,box_depth-40, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
+            led_socket();
+        }
+        
+        translate([25,box_depth-32,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        } 
+        
+        //bottom sockets
+        rotate([90,0,0]) {
+            translate([box_width-15, box_height/2, 0]) {
+                jack_socket();
+            }
+            
+            translate([15, box_height/2, 0]) {
+                jack_socket();
+            }
+        }
+        
+        translate([8,10,box_height-1]) {
+            linear_extrude(1) {
+                text("S-OUT", size=3);
+            }
+        }
+        
+        translate([box_width-21,10,box_height-1]) {
+            linear_extrude(1) {
+                text("R-OUT", size=3);
+            }
+        }
+    }
+}
+
+
+//top_part_fs_rf_relay();
+
+top_part_fxloop_rf_relay();
+//bottom_part();
 
 module bottom_pard_dc_rf_relay() {
     bottom_part();
