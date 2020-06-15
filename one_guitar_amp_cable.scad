@@ -107,6 +107,23 @@ module bottom_part() {
             }
         }
     }
+    
+    //pillars
+    translate([box_wall,box_depth/3,box_wall]) {
+        cube([box_wall,box_wall,box_height-box_wall*2]);
+    }
+    
+    translate([box_wall,box_depth/3*2,box_wall]) {
+        cube([box_wall,box_wall,box_height-box_wall*2]);
+    }
+    
+    translate([box_width-box_wall*2,box_depth/3,box_wall]) {
+        cube([box_wall,box_wall,box_height-box_wall*2]);
+    }
+    
+    translate([box_width-box_wall*2,box_depth/3*2,box_wall]) {
+        cube([box_wall,box_wall,box_height-box_wall*2]);
+    }    
 }
         
 module top_mount() {
@@ -196,8 +213,9 @@ module top_part_dc_rf_relay() {
     }
 }
 
-top_part_dc_rf_relay();
+//top_part_dc_rf_relay();
 
+bottom_part();
 
 module bottom_pard_dc_rf_relay() {
     bottom_part();
@@ -208,3 +226,4 @@ module bottom_pard_dc_rf_relay() {
         }
     }
 }
+
