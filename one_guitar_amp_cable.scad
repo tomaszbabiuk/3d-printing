@@ -77,10 +77,10 @@ module bottom_side(width, height, radius, wall, with_holes=false) {
             
             if (with_holes) {
                 translate([6,box_height-6,0]) {
-                    cylinder(h=box_wall, d=3);
+                    cylinder(h=box_wall, d=3.1);
                 }
                 translate([box_depth-6,box_height-6,0]) {
-                    cylinder(h=box_wall, d=3);
+                    cylinder(h=box_wall, d=3.1);
                 }
             }
         }
@@ -129,7 +129,13 @@ module bottom_part() {
 module top_mount() {
     difference() {
         cylinder(h=box_width-box_wall*2, d=7);
-        cylinder(h=box_width-box_wall*2, d=3);
+        cylinder(h=box_width-box_wall*2, d=3.1);
+    }
+}
+
+module lipo_tester() {
+    translate([-23.5/2,-28.5/2,0]) {
+        cube([23.5,28.5,box_wall-0.2]);
     }
 }
 
@@ -189,7 +195,7 @@ module top_part_fs_rf_relay() {
             switch_socket();
         }
         
-        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
+        translate([box_width/2,box_depth-54, box_height-box_wall*2]) {
             led_socket();
         }
         
@@ -256,7 +262,7 @@ module top_part_fxloop_rf_relay() {
             switch_socket();
         }
         
-        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
+        translate([box_width/2,box_depth-54, box_height-box_wall*2]) {
             led_socket();
         }
         
@@ -268,11 +274,11 @@ module top_part_fxloop_rf_relay() {
         
         //bottom sockets
         rotate([90,0,0]) {
-            translate([box_width-15, box_height/2, 0]) {
+            translate([box_width-15, box_height/2, -box_wall]) {
                 jack_socket();
             }
             
-            translate([15, box_height/2, 0]) {
+            translate([15, box_height/2, -box_wall]) {
                 jack_socket();
             }
         }
@@ -291,19 +297,62 @@ module top_part_fxloop_rf_relay() {
     }
 }
 
+module top_part_power() {
+    translate([box_width-box_wall,10,box_height- box_wall]) {
+        rotate([270,0,90]) {
+            pcb_mount(17.5,box_width-box_wall*2,3);
+        }
+    }
+        
+    difference() {
+        top_part();
 
-//top_part_fs_rf_relay();
-
-top_part_fxloop_rf_relay();
-//bottom_part();
-
-module bottom_pard_dc_rf_relay() {
-    bottom_part();
-
-    translate([box_width-box_wall,25,0]) {
-        rotate([0,0,90]) {
-            pcb_mount(50,30,3);
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, -box_depth]) {
+                power_socket();
+            }
+        }
+        
+        translate([box_width/2,box_depth-30, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([25,box_depth-22,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        } 
+        
+        translate([15,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("DC OUT (9V, - inside)", size=3);
+            }
+        }
+        
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, -box_wall]) {
+                power_socket();
+            }
+        }
+        
+        translate([13,10,box_height-1]) {
+            linear_extrude(1) {
+                text("CHARGE (5V, + inside)", size=3);
+            }
+        }
+        
+        translate([box_width/2,box_depth-60,box_height-box_wall]) {
+            lipo_tester();
         }
     }
 }
+
+
+//top_part_fs_rf_relay();
+
+//top_part_fxloop_rf_relay();
+
+top_part_power();
+
+//bottom_part();
 
