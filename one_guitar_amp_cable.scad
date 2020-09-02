@@ -31,13 +31,12 @@ module pcb_mount(pcb_width, pcb_depth, pcb_height, wall=2) {
         }
     }
     
-    translate([pcb_width,0,0]) {
+    translate([pcb_width-wall*2,0,0]) {
         difference() {
             cube([wall*4,wall+pcb_height,pcb_depth]);
             cube([wall*3,pcb_height,pcb_depth]);
             }
         }
-    
 }
 
 module rounded_square(width, height, radius) {
@@ -133,9 +132,18 @@ module top_mount() {
     }
 }
 
-module lipo_tester() {
-    translate([-23.5/2,-28.5/2,0]) {
-        cube([23.5,28.5,box_wall-0.2]);
+module lipo_hole() {
+    cube([23.5+4,28.5+4,box_wall*2], center=true);
+}
+
+module lipo_cap() {
+    difference() {
+        cube([23.5+4,28.5+4,4], center=true);
+        cube([23.5,28.5,4], center=true);
+    }
+
+    translate([0,0,2]) {
+        cube([23.5+6,28.5+6,1], center=true);
     }
 }
 
@@ -298,11 +306,12 @@ module top_part_fxloop_rf_relay() {
 }
 
 module top_part_power() {
+    /*
     translate([box_width-box_wall,10,box_height- box_wall]) {
         rotate([270,0,90]) {
             pcb_mount(17.5,box_width-box_wall*2,3);
         }
-    }
+    }*/
         
     difference() {
         top_part();
@@ -342,7 +351,7 @@ module top_part_power() {
         }
         
         translate([box_width/2,box_depth-60,box_height-box_wall]) {
-            lipo_tester();
+            lipo_hole();
         }
     }
 }
@@ -352,7 +361,24 @@ module top_part_power() {
 
 //top_part_fxloop_rf_relay();
 
+//top_part_power();
+
+module bottom_power() {
+    bottom_part();
+
+    translate([box_wall,17.5+4+10,0]) {
+        rotate([0,0,270]) {
+            pcb_mount(17.5,box_height,box_wall);
+        }
+    }
+
+    translate([box_width-box_wall,10,0]) {
+        rotate([0,0,90]) {
+            pcb_mount(17.5,box_height,box_wall);
+        }
+    }
+}
+
+//lipo_cap();
+
 top_part_power();
-
-//bottom_part();
-
