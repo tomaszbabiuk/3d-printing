@@ -30,7 +30,7 @@ module pcb_mount(pcb_width, pcb_depth, pcb_height, wall=2) {
             cube([wall*3,pcb_height,pcb_depth]);
         }
     }
-    
+
     translate([pcb_width-wall*2,0,0]) {
         difference() {
             cube([wall*4,wall+pcb_height,pcb_depth]);
@@ -73,7 +73,7 @@ module bottom_side(width, height, radius, wall, with_holes=false) {
                     square(radius, radius);
                 }
             }
-            
+
             if (with_holes) {
                 translate([6,box_height-6,0]) {
                     cylinder(h=box_wall, d=3.1);
@@ -88,10 +88,10 @@ module bottom_side(width, height, radius, wall, with_holes=false) {
 
 
 
-module bottom_part() {    
+module bottom_part() {
     bottom_side(box_depth,box_height,box_radius,box_wall, with_holes=true);
 
-    translate([box_width-box_wall,0,0]) {    
+    translate([box_width-box_wall,0,0]) {
         bottom_side(box_depth,box_height,box_radius,box_wall, with_holes=true);
     }
 
@@ -106,25 +106,25 @@ module bottom_part() {
             }
         }
     }
-    
+
     //pillars
     translate([box_wall,box_depth/3,box_wall]) {
         cube([box_wall,box_wall,box_height-box_wall*2]);
     }
-    
+
     translate([box_wall,box_depth/3*2,box_wall]) {
         cube([box_wall,box_wall,box_height-box_wall*2]);
     }
-    
+
     translate([box_width-box_wall*2,box_depth/3,box_wall]) {
         cube([box_wall,box_wall,box_height-box_wall*2]);
     }
-    
+
     translate([box_width-box_wall*2,box_depth/3*2,box_wall]) {
         cube([box_wall,box_wall,box_height-box_wall*2]);
-    }    
+    }
 }
-        
+
 module top_mount() {
     difference() {
         cylinder(h=box_width-box_wall*2, d=7);
@@ -155,7 +155,7 @@ module top_part() {
             }
         }
     }
-    
+
     translate([box_wall, box_depth-6, box_height-6]) {
         rotate([0,90,0]) {
             difference() {
@@ -163,16 +163,16 @@ module top_part() {
             }
         }
     }
-    
+
     difference() {
         translate([box_wall,0,box_wall]) {
             bottom_side(box_depth, box_height-box_wall, box_radius, box_width-box_wall*2);
         }
-        
+
         translate([box_wall,box_wall,box_wall]) {
             bottom_side(box_depth-box_wall*2, box_height-box_wall*2, box_radius, box_width-box_wall*2);
         }
-        
+
         /* bottom sockets
         translate([box_width/2,box_wall,box_height/3]) {
             rotate([90,0,0]) {
@@ -180,7 +180,7 @@ module top_part() {
             }
         }
         */
-        
+
         //top sockets
     }
 }
@@ -193,32 +193,32 @@ module top_part_fs_rf_relay() {
             translate([box_width-15, box_height/2, -box_depth]) {
                 power_socket();
             }
-            
+
             translate([15, box_height/2, -box_depth]) {
                 jack_socket();
             }
         }
-        
+
         translate([box_width/2,box_depth-40, box_height-box_wall*2]) {
             switch_socket();
         }
-        
-        translate([box_width/2,box_depth-54, box_height-box_wall*2]) {
+
+        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
             led_socket();
         }
-        
+
         translate([25,box_depth-32,box_height-1]) {
             linear_extrude(1) {
                 text("On/Off", size=4);
             }
-        } 
-        
+        }
+
         translate([12,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("FS", size=3);
             }
         }
-        
+
         translate([box_width-23,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("DC (9V)", size=3);
@@ -237,66 +237,66 @@ module top_part_fxloop_rf_relay() {
             translate([box_width-15, box_height/2, -box_depth]) {
                 jack_socket();
             }
-            
+
             translate([box_width/2, box_height/2, -box_depth]) {
                 power_socket();
             }
-            
+
             translate([15, box_height/2, -box_depth]) {
                 jack_socket();
             }
         }
-        
+
         translate([27,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("DC (9V)", size=3);
             }
         }
-        
+
         translate([11,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("S-IN", size=3);
             }
         }
-        
+
         translate([box_width-18,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("R-IN", size=3);
             }
         }
-        
+
         //plate sockets
         translate([box_width/2,box_depth-40, box_height-box_wall*2]) {
             switch_socket();
         }
-        
-        translate([box_width/2,box_depth-54, box_height-box_wall*2]) {
+
+        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
             led_socket();
         }
-        
+
         translate([25,box_depth-32,box_height-1]) {
             linear_extrude(1) {
                 text("On/Off", size=4);
             }
-        } 
-        
+        }
+
         //bottom sockets
         rotate([90,0,0]) {
-            translate([box_width-15, box_height/2, -box_wall]) {
+            translate([box_width-15, box_height/2, 0]) {
                 jack_socket();
             }
-            
-            translate([15, box_height/2, -box_wall]) {
+
+            translate([15, box_height/2, 0]) {
                 jack_socket();
             }
         }
-        
+
         translate([8,10,box_height-1]) {
             linear_extrude(1) {
                 text("S-OUT", size=3);
             }
         }
-        
+
         translate([box_width-21,10,box_height-1]) {
             linear_extrude(1) {
                 text("R-OUT", size=3);
@@ -312,7 +312,7 @@ module top_part_power() {
             pcb_mount(17.5,box_width-box_wall*2,3);
         }
     }*/
-        
+
     difference() {
         top_part();
 
@@ -321,35 +321,35 @@ module top_part_power() {
                 power_socket();
             }
         }
-        
+
         translate([box_width/2,box_depth-30, box_height-box_wall*2]) {
             switch_socket();
         }
-        
+
         translate([25,box_depth-22,box_height-1]) {
             linear_extrude(1) {
                 text("On/Off", size=4);
             }
-        } 
-        
+        }
+
         translate([15,box_depth-10,box_height-1]) {
             linear_extrude(1) {
                 text("DC OUT (9V, - inside)", size=3);
             }
         }
-        
+
         rotate([90,0,0]) {
             translate([box_width/2, box_height/2, -box_wall]) {
                 power_socket();
             }
         }
-        
+
         translate([13,10,box_height-1]) {
             linear_extrude(1) {
                 text("CHARGE (5V, + inside)", size=3);
             }
         }
-        
+
         translate([box_width/2,box_depth-60,box_height-box_wall]) {
             lipo_hole();
         }
