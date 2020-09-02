@@ -292,9 +292,58 @@ module top_part_fxloop_rf_relay() {
 }
 
 
+module top_part_battery() {
+    difference() {
+        top_part();
+
+        //top sockets
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, -box_depth]) {
+                power_socket();
+            }
+        }
+        
+        translate([25,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("OUT (9V)", size=3);
+            }
+        }
+        
+        //plate sockets
+        translate([box_width/2,box_depth-40, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2,box_depth-52, box_height-box_wall*2]) {
+            led_socket();
+        }
+        
+        translate([25,box_depth-32,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        } 
+        
+        //bottom sockets
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, 0]) {
+                power_socket();
+            }
+        }
+ 
+        
+        translate([27,10,box_height-1]) {
+            linear_extrude(1) {
+                text("IN (5V)", size=3);
+            }
+        }
+    }
+}
+
+
 //top_part_fs_rf_relay();
 
-top_part_fxloop_rf_relay();
+top_part_battery();
 //bottom_part();
 
 module bottom_pard_dc_rf_relay() {
