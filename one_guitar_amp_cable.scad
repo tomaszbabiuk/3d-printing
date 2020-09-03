@@ -31,13 +31,12 @@ module pcb_mount(pcb_width, pcb_depth, pcb_height, wall=2) {
         }
     }
 
-    translate([pcb_width,0,0]) {
+    translate([pcb_width-wall*2,0,0]) {
         difference() {
             cube([wall*4,wall+pcb_height,pcb_depth]);
             cube([wall*3,pcb_height,pcb_depth]);
             }
         }
-
 }
 
 module rounded_square(width, height, radius) {
@@ -129,7 +128,22 @@ module bottom_part() {
 module top_mount() {
     difference() {
         cylinder(h=box_width-box_wall*2, d=7);
-        cylinder(h=box_width-box_wall*2, d=3);
+        cylinder(h=box_width-box_wall*2, d=3.1);
+    }
+}
+
+module lipo_hole() {
+    cube([23.5+4,28.5+4,box_wall*2], center=true);
+}
+
+module lipo_cap() {
+    difference() {
+        cube([23.5+4,28.5+4,4], center=true);
+        cube([23.5,28.5,4], center=true);
+    }
+
+    translate([0,0,2]) {
+        cube([23.5+6,28.5+6,1], center=true);
     }
 }
 
@@ -291,19 +305,80 @@ module top_part_fxloop_rf_relay() {
     }
 }
 
+module top_part_power() {
+    /*
+    translate([box_width-box_wall,10,box_height- box_wall]) {
+        rotate([270,0,90]) {
+            pcb_mount(17.5,box_width-box_wall*2,3);
+        }
+    }*/
 
-//top_part_fs_rf_relay();
+    difference() {
+        top_part();
 
-top_part_battery();
-//bottom_part();
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, -box_depth]) {
+                power_socket();
+            }
+        }
 
-module bottom_pard_dc_rf_relay() {
-    bottom_part();
+        translate([box_width/2,box_depth-30, box_height-box_wall*2]) {
+            switch_socket();
+        }
 
-    translate([box_width-box_wall,25,0]) {
-        rotate([0,0,90]) {
-            pcb_mount(50,30,3);
+        translate([25,box_depth-22,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        }
+
+        translate([15,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("DC OUT (9V, - inside)", size=3);
+            }
+        }
+
+        rotate([90,0,0]) {
+            translate([box_width/2, box_height/2, -box_wall]) {
+                power_socket();
+            }
+        }
+
+        translate([13,10,box_height-1]) {
+            linear_extrude(1) {
+                text("CHARGE (5V, + inside)", size=3);
+            }
+        }
+
+        translate([box_width/2,box_depth-60,box_height-box_wall]) {
+            lipo_hole();
         }
     }
 }
 
+
+//top_part_fs_rf_relay();
+
+//top_part_fxloop_rf_relay();
+
+//top_part_power();
+
+module bottom_power() {
+    bottom_part();
+
+    translate([box_wall,17.5+4+10,0]) {
+        rotate([0,0,270]) {
+            pcb_mount(17.5,box_height,box_wall);
+        }
+    }
+
+    translate([box_width-box_wall,10,0]) {
+        rotate([0,0,90]) {
+            pcb_mount(17.5,box_height,box_wall);
+        }
+    }
+}
+
+//lipo_cap();
+
+top_part_power();
