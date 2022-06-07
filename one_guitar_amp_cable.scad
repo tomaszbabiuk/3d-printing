@@ -2,7 +2,7 @@
 //tc electronic box: 74x130x38, rozstaw śrub 100
 
 box_wall=3;
-box_width=74-box_wall*2;
+box_width=85-box_wall*2;
 box_depth=130;
 box_height=38;
 box_radius=5;
@@ -326,15 +326,9 @@ module top_part_power() {
             switch_socket();
         }
 
-        translate([25,box_depth-22,box_height-1]) {
+        translate([14,box_depth-10,box_height-1]) {
             linear_extrude(1) {
-                text("On/Off", size=4);
-            }
-        }
-
-        translate([15,box_depth-10,box_height-1]) {
-            linear_extrude(1) {
-                text("DC OUT (9V, - inside)", size=3);
+                text("DC OUT (9V, - inside)", size=4);
             }
         }
 
@@ -344,9 +338,9 @@ module top_part_power() {
             }
         }
 
-        translate([13,10,box_height-1]) {
+        translate([11,10,box_height-1]) {
             linear_extrude(1) {
-                text("CHARGE (5V, + inside)", size=3);
+                text("CHARGE (5V, + inside)", size=4);
             }
         }
 
@@ -368,17 +362,25 @@ module bottom_power() {
 
     translate([box_wall,17.5+4+10,0]) {
         rotate([0,0,270]) {
-            pcb_mount(17.5,box_height,box_wall);
+            pcb_mount(17.5,25,4);
         }
     }
 
     translate([box_width-box_wall,10,0]) {
         rotate([0,0,90]) {
-            pcb_mount(17.5,box_height,box_wall);
+            pcb_mount(17.5,25,4);
+        }
+    }
+    
+    translate([box_width-box_wall,box_depth-17.5-box_wall*2-10,0]) {
+        rotate([0,0,90]) {
+            pcb_mount(17.5,25,4);
         }
     }
 }
 
 //lipo_cap();
 
-top_part_power();
+//top_part_power();
+
+bottom_power();
