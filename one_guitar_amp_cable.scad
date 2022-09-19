@@ -2,7 +2,7 @@
 //tc electronic box: 74x130x38, rozstaw śrub 100
 
 box_wall=3;
-box_width=85-box_wall*2;
+box_width=126-box_wall*2;
 box_depth=130;
 box_height=38;
 box_radius=5;
@@ -16,27 +16,15 @@ module jack_socket() {
 }
 
 module switch_socket() {
-    cylinder(h=box_wall*2, d=6);
+    cylinder(h=box_wall*2, d=6.5);
 }
 
 module led_socket() {
     cylinder(h=box_wall*2, d=8);
 }
 
-module pcb_mount(pcb_width, pcb_depth, pcb_height, wall=2) {
-    difference() {
-        cube([wall*4,wall+pcb_height,pcb_depth]);
-        translate([wall,0,0]) {
-            cube([wall*3,pcb_height,pcb_depth]);
-        }
-    }
-
-    translate([pcb_width-wall*2,0,0]) {
-        difference() {
-            cube([wall*4,wall+pcb_height,pcb_depth]);
-            cube([wall*3,pcb_height,pcb_depth]);
-            }
-        }
+module trs_socket() {
+    cylinder(h=box_wall*2, d=8);
 }
 
 module rounded_square(width, height, radius) {
@@ -357,30 +345,131 @@ module top_part_power() {
 
 //top_part_power();
 
-module bottom_power() {
-    bottom_part();
-
-    translate([box_wall,17.5+4+10,0]) {
-        rotate([0,0,270]) {
-            pcb_mount(17.5,25,4);
-        }
-    }
-
-    translate([box_width-box_wall,10,0]) {
-        rotate([0,0,90]) {
-            pcb_mount(17.5,25,4);
-        }
-    }
-    
-    translate([box_width-box_wall,box_depth-17.5-box_wall*2-10,0]) {
-        rotate([0,0,90]) {
-            pcb_mount(17.5,25,4);
-        }
-    }
-}
-
 //lipo_cap();
 
 //top_part_power();
 
-bottom_power();
+//bottom_power();
+
+module screw_socket() {
+    difference() {
+        cylinder(h=box_wall*2, d=6);
+        cylinder(h=box_wall*2, d=3);
+    }
+}
+
+module pca10040_mount() {
+    
+    %cube([64,101,1]);
+   
+    
+    translate([6+2,14+2,0]) {
+        screw_socket();
+    }
+    
+    translate([55+2,14+2,0]) {
+        screw_socket();
+    }
+    
+    translate([11+2,64+2,0]) {
+        screw_socket();
+    }
+    
+    translate([40+2,64+2,0]) {
+        screw_socket();
+    }
+    
+    translate([55+2,95+2,0]) {
+        screw_socket();
+    }
+}
+
+module battery_holder() {
+    cube([20,75,16]);
+}
+
+module bottom_midi() {
+    bottom_part();
+    translate([7+20+1+20+1,8,box_wall]) {
+        pca10040_mount();
+    }
+
+    %translate([7,30,box_wall]) {
+        battery_holder();
+    }
+
+    %translate([7+20+1,30,box_wall]) {
+        battery_holder();
+    }
+}
+
+
+//bottom_midi();
+
+module top_midi() {
+    difference() {
+        top_part();
+        
+        rotate([90,0,0]) {
+            translate([box_width/2-22.5, box_height/2, -box_depth]) {
+                power_socket();
+            }
+        }
+        
+        rotate([90,0,0]) {
+            translate([box_width/2+22.5, box_height/2, -box_depth]) {
+                trs_socket();
+            }
+        }
+
+        translate([box_width/2,box_depth-20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2-45,box_depth-20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2+45,box_depth-20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        
+        translate([box_width/2, 20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2-45, 20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+        
+        translate([box_width/2+45, 20, box_height-box_wall*2]) {
+            switch_socket();
+        }
+
+        /*
+        translate([25,box_depth-32,box_height-1]) {
+            linear_extrude(1) {
+                text("On/Off", size=4);
+            }
+        }
+
+        translate([12,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("FS", size=3);
+            }
+        }
+
+        translate([box_width-23,box_depth-10,box_height-1]) {
+            linear_extrude(1) {
+                text("DC (9V)", size=3);
+            }
+        }
+        */
+    }
+}
+
+
+bottom_midi();
+
+%top_midi();
